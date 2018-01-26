@@ -25,20 +25,20 @@ holder_height = 60;
 holder_roundness = 10;
 
 // Phone width
-phone_x = 68.1;
+phone_x = 69;
 // Phone Depth
-phone_y = 8;
+phone_y = 9 ;
 
 // Angle at which the phone should lean back
-dock_angle = 20;
+dock_angle = 25;
 // Depth at which phone should be inset into the holder
-dock_z = 10;
+dock_z = 20;
 // Phone back rest height
 dock_rest_z = 25;
 // Phone back rest width
-dock_rest_x = 46;
+dock_rest_x = 69;
 // Phone back rest depth
-dock_rest_y = 10;
+dock_rest_y = 5;
 // Set to 0 for square edges. Don't set to half or more of the smallest dock_rest dimension or you'll get a sphere.
 dock_rest_roundness = 2;
 
@@ -47,7 +47,9 @@ plug_x = 12.2;
 // Depth of charging plug
 plug_y = 4.7;
 // Length of charging plug, minus the contacts
-plug_z = 17.2; 
+plug_z = 19;
+// Distance of charging plug from front of phone
+plug_offset = 3.3;
 
 // Width of cable channel on the back
 cable_x = 3;
@@ -57,12 +59,13 @@ cable_y = 3;
 // Smoothness of all rounded edges. Use a low number for faster rendering, increase when performing final render
 round_smoothness= 72;
 
+cos_d_a = cos(dock_angle);
+sin_d_a = sin(dock_angle);
+
 holder_radius = holder_diameter/2;
-dock_drop = dock_z + (sin(dock_angle) * phone_y) - (cos(dock_angle) * dock_z);
-gouge_height = holder_height - ((cos(dock_angle) * plug_z) + (cos(dock_angle) * dock_z)- (sin(dock_angle) * (phone_y - ((phone_y - plug_y) / 2))));
-rest_setback = (sin(dock_angle) * dock_z) + (cos(dock_angle) * phone_y) - phone_y / 2;
-
-
+dock_drop = (sin_d_a * phone_y / 2) - (cos_d_a * dock_z / 2);
+gouge_height = holder_height - ((cos_d_a * plug_z) + (cos_d_a * dock_z)- (sin_d_a * (phone_y - ((phone_y - plug_y) / 2))));
+rest_setback = (sin_d_a * dock_z / 2) + (cos_d_a * phone_y / 2);
 
 difference() {
     union () {
@@ -73,19 +76,20 @@ difference() {
             }
             translate([0 - (dock_rest_x / 2), rest_setback, holder_height])
                 rotate(a = (0 - dock_angle), v = [1, 0, 0])
-                    translate([dock_rest_roundness, dock_rest_roundness, 0 - (dock_rest_roundness/2)])
+                    translate([dock_rest_roundness, dock_rest_roundness, 0 - (dock_rest_roundness/2) - 10])
                         minkowski() {
-                            cube([dock_rest_x-(dock_rest_roundness*2), dock_rest_y-(dock_rest_roundness*2), dock_rest_z-dock_rest_roundness/2]); // Dock rest
+                            cube([dock_rest_x-(dock_rest_roundness*2), dock_rest_y-(dock_rest_roundness*2), 10 + dock_rest_z-dock_rest_roundness/2]); // Dock rest
                             sphere(dock_rest_roundness, $fn=round_smoothness);
                         }
     }
-    translate([(0 - phone_x) / 2,(0 - phone_y) / 2, holder_height + dock_drop - dock_z])
+    translate([(0 - phone_x) / 2, 0, holder_height + dock_drop])
         rotate(a = (0 - dock_angle), v = [1, 0, 0])
-            union() {
-                cube([phone_x, phone_y, dock_z]);
-                translate([phone_x / 2 - plug_x / 2, phone_y / 2 - plug_y / 2, 0 - plug_z - 1])
-                    cube([plug_x, plug_y, plug_z + 2]); // Plug hole
-            }
+            translate ([0, 0 - (phone_y / 2), 0 - (dock_z / 2)])
+                union() {
+                    # cube([phone_x, phone_y, dock_z]); // Phone inset
+                    translate([phone_x / 2 - plug_x / 2, phone_y / 2 - plug_y / 2, 0 - plug_z - 1])
+                       # cube([plug_x, plug_y, plug_z + 2]); // Plug hole
+                }
     translate([0 - (cable_x / 2), holder_radius - cable_y, 0])
         cube([cable_x, cable_y, holder_height]); // Cable holder
     translate([0 - (plug_x + 5) / 2, 0 - holder_radius, 0])
