@@ -64,7 +64,7 @@ sin_d_a = sin(dock_angle);
 
 holder_radius = holder_diameter/2;
 dock_drop = (sin_d_a * phone_y / 2) - (cos_d_a * dock_z / 2);
-gouge_height = holder_height - ((cos_d_a * plug_z) + (cos_d_a * dock_z)- (sin_d_a * (phone_y - ((phone_y - plug_y) / 2))));
+gouge_height = holder_height - ((cos_d_a * plug_z) + (cos_d_a * dock_z) - (sin_d_a * (phone_y - plug_offset)));
 rest_setback = (sin_d_a * dock_z / 2) + (cos_d_a * phone_y / 2);
 
 difference() {
@@ -87,7 +87,7 @@ difference() {
             translate ([0, 0 - (phone_y / 2), 0 - (dock_z / 2)])
                 union() {
                     # cube([phone_x, phone_y, dock_z]); // Phone inset
-                    translate([phone_x / 2 - plug_x / 2, phone_y / 2 - plug_y / 2, 0 - plug_z - 1])
+                    translate([phone_x / 2 - plug_x / 2, plug_offset, 0 - plug_z - 1])
                        # cube([plug_x, plug_y, plug_z + 2]); // Plug hole
                 }
     translate([0 - (cable_x / 2), holder_radius - cable_y, 0])
