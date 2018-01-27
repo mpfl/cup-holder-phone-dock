@@ -17,4 +17,7 @@ v0.2
  * Added side walls to dock rest to stop phone falling over when not plugged in
  * Added plug offset for phones where the plug is not dead centre along the y axis
  * Removed roundess from top
- 
+
+v1.0
+ * modularised code
+ * a bit more friendly for Thingiverse Customizer 
