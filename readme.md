@@ -20,4 +20,8 @@ v0.2
 
 v1.0
  * modularised code
- * a bit more friendly for Thingiverse Customizer 
+ * a bit more friendly for Thingiverse Customizer
+
+v2.0
+ * Converted from rounded shape to tapered shape
+ * Added shelf to hold charging plug so that it doesn't get pushed down when the phone is inserted 

@@ -24,6 +24,10 @@ v1.0
  * modularised code
  * a bit more friendly for Thingiverse Customizer
 
+v2.0
+ * Converted from rounded shape to tapered shape
+ * Added shelf to hold charging plug so that it doesn't get pushed down when the phone is inserted
+
 */ 
 
 /* [ Basics ] */
@@ -139,15 +143,16 @@ module create_dock_rest() {
 }
 
 module create_cable_channel() {
-    translate([0 - (cable_x / 2), holder_top_radius - cable_y, -1])
-        cube([cable_x, cable_y, holder_height +2]);
+    translate([0 - (cable_x / 2), holder_top_radius -  2 * cable_y, -1])
+        rotate(a = 0-atan((holder_top_radius - holder_bottom_radius)/ holder_height), v = [1,0,0])
+            cube([cable_x, cable_y, holder_height +2]);
 }
 
 module create_plug_hole() {
-    translate([phone_x / 2 - plug_x / 2, plug_offset, 0 - plug_z - 1])
+    translate([phone_x / 2 - plug_x / 2, plug_offset, 0 - plug_z])
         union() {
-            cube([plug_x, plug_y, plug_z + 2]);
-            translate([plug_x/2 - plug_y/2 - 0.5, 0 - plug_offset, - 5])
-                cube([plug_y + 1, plug_x + 1, plug_z + plug_z + 7]);
+            cube([plug_x, plug_y, plug_z + 1]);
+            translate([plug_x/2 - plug_y/2 - 0.5, 0 - plug_offset, - 13])
+                cube([plug_y + 1, plug_x + 1, plug_z + plug_z + 20]);
         }
 }
